@@ -1,0 +1,27 @@
+﻿@model TiendaVirtual.Data.Entities.Categoria
+
+@{
+    ViewData["Title"] = "DeleteCate";
+}
+
+<h1>Borrar</h1>
+
+<h3>Estas seguro de eliminar esta categoria?</h3>
+<div>
+
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+    </dl>
+
+    <form asp-action="DeleteCate" mt-3>
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Borrar" class="btn btn-outline-danger" />
+        <a asp-action="InicioCat" class="btn btn-outline-success">Regresar</a>
+    </form>
+</div>
