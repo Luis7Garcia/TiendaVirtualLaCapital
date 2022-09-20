@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TiendaVirtual.Data;
 using TiendaVirtual.Data.Entities;
 
 namespace TiendaVirtual.Controllers
 {
+    [Authorize(Roles ="Admin")]
     public class CategoriasController : Controller
     {
         private readonly DatosTienda _context;

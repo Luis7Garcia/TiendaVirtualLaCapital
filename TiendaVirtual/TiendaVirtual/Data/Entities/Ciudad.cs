@@ -8,11 +8,14 @@ namespace TiendaVirtual.Data.Entities
 
         //Se especifican las validaciones para este campo.
         [Display(Name =("Ciudad"))]
-        [MaxLength(50, ErrorMessage ="El campo {0} debe ser máximo de {1} caractéres.")]
+        [MaxLength(50, ErrorMessage ="El campo {0} debe ser máximo de {1} carácteres.")]
         [Required(ErrorMessage ="El campo {0} es obligatorio.")]
         public string Nombre { get; set; }
 
         //Aqui se conecta la relacion con estado.
         public Estado Estado { get; set; }
+
+        //Relación de uno a muchos.
+        public ICollection<Usuario> Usuarios { get; set; }
     }
 }

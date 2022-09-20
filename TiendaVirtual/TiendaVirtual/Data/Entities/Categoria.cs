@@ -8,7 +8,7 @@ namespace TiendaVirtual.Data.Entities
 
         //Se especifican las validaciones para este campo.
         [Display(Name =("Categoria"))]
-        [MaxLength(50, ErrorMessage ="El campo {0} debe ser máximo de {1} caractéres")]
+        [MaxLength(50, ErrorMessage ="El campo {0} debe ser máximo de {1} carácteres")]
         [Required(ErrorMessage ="El campo {0} es obligatorio")]
         public string Nombre { get; set; }
     }

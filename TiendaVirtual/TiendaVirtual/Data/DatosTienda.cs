@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using TiendaVirtual.Data.Entities;
 
 namespace TiendaVirtual.Data
 {
     //Se hereda de DbContext
-    public class DatosTienda : DbContext
+    public class DatosTienda : IdentityDbContext<Usuario>
     {
         public DatosTienda( DbContextOptions<DatosTienda> options): base(options)
         {
