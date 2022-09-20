@@ -42,7 +42,7 @@ builder.Services.AddScoped<IayudasUsuario, AyudasUsuario>();
 var app = builder.Build();
 principalData();
 
-//Con este metodo estoy inyectando la conexión a la base de datos con el principalDb
+//Con este método estoy inyectando la conexión a la base de datos con el principalDb
 void principalData()
 {
    IServiceScopeFactory? scopeFactory = app.Services.GetService<IServiceScopeFactory>();

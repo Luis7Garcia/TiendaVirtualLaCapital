@@ -4,9 +4,11 @@ using TiendaVirtual.Data.Entities;
 
 namespace TiendaVirtual.Data
 {
-    //Se hereda de DbContext
+    //Se hereda de IdentityDbContext, el cual contiene métodos que van ayudar para la configuración
+    //y le paso la entidad usuario para que me la cree con las demas tablas que crea el identity.
     public class DatosTienda : IdentityDbContext<Usuario>
     {
+        //Creo un constructor con un parametro el cual le paso al constructor de base al DbContext 
         public DatosTienda( DbContextOptions<DatosTienda> options): base(options)
         {
         }

@@ -6,7 +6,7 @@ using TiendaVirtual.Data.Entities;
 
 namespace TiendaVirtual.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = "Admin")]
     public class CategoriasController : Controller
     {
         private readonly DatosTienda _context;
@@ -148,8 +148,8 @@ namespace TiendaVirtual.Controllers
             return View();
         }
 
-        // POST: Estadoes/Delete/5
-        [HttpPost, ActionName("Delete")]
+
+        [HttpPost, ActionName("DeleteCate")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmedCate(int id)
         {

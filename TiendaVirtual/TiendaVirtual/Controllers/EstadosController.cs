@@ -7,17 +7,22 @@ using TiendaVirtual.Models;
 
 namespace TiendaVirtual.Controllers
 {
+    //Este authorize especifica que el unico que va tener permiso para acceder a ubicaciones, para
+    //crear, editar, eliminar es el administrador. 
     [Authorize(Roles ="Admin")]
     public class EstadosController : Controller
     {
+        
         private readonly DatosTienda _context;
 
+        //Se inyecta el DatosTienda por medio del constructor.
         public EstadosController(DatosTienda context)
         {
             _context = context;
         }
 
-        // GET: Estadoes
+       //Estos métodos son asincronos, todo método asincrono debe ir acompañado
+       //de un await, el await lo que hace es esperar que termine la consulta para poder ejecutarla.
         public async Task<IActionResult> Inicio()
         {
             return View(await _context.Estados
@@ -130,7 +135,7 @@ namespace TiendaVirtual.Controllers
             return View(model);
         }
 
-        // GET: Estadoes/Edit/5
+       
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -255,7 +260,6 @@ namespace TiendaVirtual.Controllers
             return View(model);
         }
 
-        // GET: Estadoes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -292,9 +296,6 @@ namespace TiendaVirtual.Controllers
             return View(ciudad);
         }
 
-
-
-        // GET: Estadoes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -311,7 +312,6 @@ namespace TiendaVirtual.Controllers
             return View(estado);
         }
 
-        // POST: Estadoes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -346,7 +346,6 @@ namespace TiendaVirtual.Controllers
             return View(ciudad);
         }
 
-        // POST: Estadoes/Delete/5
         [HttpPost, ActionName("DeleteCiudad")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmedCiudad(int id)
