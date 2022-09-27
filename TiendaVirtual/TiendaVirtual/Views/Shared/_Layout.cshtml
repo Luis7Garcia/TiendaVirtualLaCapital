@@ -10,45 +10,59 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 border-success">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TiendaVirtual</a>
+                <a class="navbar-brand btn btn-outline-success" asp-area="" asp-controller="Home" asp-action="Index">TiendaVirtual</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                   
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
+                            <a class="nav-link text-dark btn btn-outline-warning" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Politicas</a>
+                            <a class="nav-link text-dark btn btn-outline-danger" asp-area="" asp-controller="Home" asp-action="Privacy">Politicas</a>
                         </li>
                         @if(User.Identity.IsAuthenticated && User.IsInRole("Admin")){
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Categorias" asp-action="InicioCat">Categorias</a>
+                                <a class="nav-link text-dark btn btn-outline-info" asp-area="" asp-controller="Categorias" asp-action="InicioCat">Categorias</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Estados" asp-action="Inicio">Ubicación</a>
+                                <a class="nav-link text-dark btn btn-outline-primary" asp-area="" asp-controller="Estados" asp-action="Inicio">Ubicación</a>
+                            </li>
+
+
+                        }
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Usuario"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark btn btn-outline-info" asp-area="" asp-controller="Home" asp-action="Index">Productos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark btn btn-outline-primary" asp-area="" asp-controller="Home" asp-action="Index">Carrito de compras</a>
                             </li>
                         }
-                        
+
                     </ul>
+                    
                     <ul class="nav navbar-nav navbar-right">
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Cuenta" asp-action="ChangeUser">@User.Identity.Name</a>
+                                <a class="nav-link text-dark btn btn-outline-info" asp-area="" asp-controller="Cuenta" asp-action="ChangeUser">@User.Identity.Name</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Cuenta" asp-action="Logout">Cerrar Sesión</a>
+                                <a class="nav-link text-dark btn-warning" asp-area="" asp-controller="Cuenta" asp-action="Logout">Cerrar Sesión</a>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Cuenta" asp-action="Login">Iniciar Sesión</a>
+                                <a class="nav-link text-dark btn btn-outline-success" asp-area="" asp-controller="Cuenta" asp-action="Login">Iniciar Sesión</a>
                             </li>
                         }
                     </ul>

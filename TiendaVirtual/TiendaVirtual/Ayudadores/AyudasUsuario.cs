@@ -31,6 +31,34 @@ namespace TiendaVirtual.Ayudadores
             return await _userManager.CreateAsync(user, password);
         }
 
+        public async Task<Usuario> AddUsuarioAsync(AgregarUsuarioVistaModelo model)
+        {
+            Usuario usuario = new()
+            {
+                Documento = model.Documento,
+                Nombre = model.Nombre,
+                Apellido = model.Apellido,
+                Email = model.Username,
+                Direccion = model.Direccion,
+                ImagenId = model.ImagenId,
+                PhoneNumber = model.PhoneNumber,
+                Ciudad = await _context.Ciudades.FindAsync(model.CiudadId),
+                UserName = model.Username,
+                tipoUsuario = model.TipoUsuario,
+
+            };
+
+            IdentityResult result = await _userManager.CreateAsync(usuario, model.Password);
+            if(result != IdentityResult.Success)
+            {
+                return null;
+            }
+
+            Usuario newUsuario = await GetUsuarioAsync(model.Username);
+            await AddUsuarioARolAsync(newUsuario, usuario.tipoUsuario.ToString());
+            return newUsuario;
+        }
+
         public async Task CheckiarRolesAsync(string roleName)
         {
             bool roleExist = await _roleManager.RoleExistsAsync(roleName);

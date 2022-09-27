@@ -35,7 +35,7 @@ namespace TiendaVirtual.Data.Entities
         [Display(Name = "Foto")]
         public string ImageFullPath => ImagenId == Guid.Empty
              ? $"https://localhost:7061/imagenes/noimage.png"
-             : $"https://TiendaVirtual.blob.core.windows.net/usuarios/{ImagenId}";
+             : $"https://tiendalacapital.blob.core.windows.net/usuarios/{ImagenId}";
 
         [Display(Name ="Tipo de usuario")]
         public TipoUsuario tipoUsuario { get; set; }

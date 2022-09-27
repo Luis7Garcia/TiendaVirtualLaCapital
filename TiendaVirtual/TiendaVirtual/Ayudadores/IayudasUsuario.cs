@@ -11,7 +11,7 @@ namespace TiendaVirtual.Ayudadores
 
         //Este método permite crear el usuario se le pasa el usuario y la contraseña 
         Task<IdentityResult> AddUsuarioAsync(Usuario user, string password);
-
+        Task<Usuario> AddUsuarioAsync(AgregarUsuarioVistaModelo model); 
         //Este método verifica si un rol existe y si no existe lo crea.
         Task CheckiarRolesAsync(string roleName);
 

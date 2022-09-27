@@ -1,0 +1,84 @@
+﻿@model TiendaVirtual.Models.AgregarUsuarioVistaModelo
+@{
+    ViewData["Title"] = "Registro";
+}
+<br/>
+<h2 class="list-group-item-success">Registro</h2>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Registro" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="TipoUsuario" />
+            <input type="hidden" asp-for="Estados" />
+            <input type="hidden" asp-for="Ciudades" />
+
+            <div class="form-group">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Password" class="control-label"></label>
+                        <input asp-for="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="PasswordConfirm" class="control-label"></label>
+                        <input asp-for="PasswordConfirm" class="form-control" />
+                        <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <partial name="_Usuario" />
+
+            <div class="form-group mt-2">
+                <input type="submit" value="Registrar" class="btn btn-outline-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#EstadoId").change(function () {
+                debugger;
+                $("#CiudadId").empty();
+                $("#CiudadId").append('<option value="0">[Selecciona una ciudad...]</option>');
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetCiudades")',
+                    dataType: 'json',
+                    data: { estadoId: $("#EstadoId").val() },
+                    success: function (ciudades) {
+                        $.each(ciudades, function (i, ciudad) {
+                            $("#CiudadId").append('<option value="'
+                                + ciudad.id + '">'
+                                + ciudad.nombre + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve ciudades.' + ex);
+                    }
+                });
+                return false;
+            })
+        });
+    </script>
+}
+
+
+

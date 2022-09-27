@@ -38,6 +38,9 @@ builder.Services.AddTransient<PrincipalDb>();
 //Este scoped lo que me ayuda es que inyecta lo que le estoy pasando cada que se llama y
 //se destruye cuando se utiliza.
 builder.Services.AddScoped<IayudasUsuario, AyudasUsuario>();
+builder.Services.AddScoped<ICombosAyudas, ComboAyudas>();
+builder.Services.AddScoped<IBlobAyudas, BlobAyudas>();
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
 var app = builder.Build();
 principalData();
