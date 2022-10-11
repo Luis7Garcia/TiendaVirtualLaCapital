@@ -15,6 +15,7 @@ namespace TiendaVirtual.Data.Entities
         public string Nombre { get; set; }
 
         //Aqui se conecta la relacion con estado.
+       
         [JsonIgnore]
         public Estado Estado { get; set; }
 

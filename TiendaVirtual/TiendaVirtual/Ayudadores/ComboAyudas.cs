@@ -34,7 +34,7 @@ namespace TiendaVirtual.Ayudadores
             })
                 .OrderBy(e => e.Text)
                 .ToListAsync();
-            list.Insert(0, new SelectListItem { Text = "[Seleccione una departamento...", Value = "0" });
+            list.Insert(0, new SelectListItem { Text = "[Seleccione un departamento...", Value = "0" });
             return list;
         }
 

@@ -59,6 +59,11 @@ namespace TiendaVirtual.Ayudadores
             return newUsuario;
         }
 
+        public async Task<IdentityResult> ChangePasswordAsync(Usuario user, string oldPassword, string newPassword)
+        {
+            return await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+        }
+
         public async Task CheckiarRolesAsync(string roleName)
         {
             bool roleExist = await _roleManager.RoleExistsAsync(roleName);
@@ -73,8 +78,18 @@ namespace TiendaVirtual.Ayudadores
 
         public async Task<Usuario> GetUsuarioAsync(string email)
         {
-            return await _context.Users.Include(c => c.Ciudad)
+            return await _context.Users
+                .Include(u => u.Ciudad)
+                .ThenInclude(c => c.Estado)
                 .FirstOrDefaultAsync(u => u.Email == email);
+        }
+
+        public async Task<Usuario> GetUsuarioAsync(Guid userId)
+        {
+            return await _context.Users
+                .Include(u => u.Ciudad)
+                .ThenInclude(c => c.Estado)
+                .FirstOrDefaultAsync(u => u.Id == userId.ToString());
         }
 
         public async Task<bool> IsUsuariounRolAsync(Usuario user, string rolNombre)
@@ -90,6 +105,11 @@ namespace TiendaVirtual.Ayudadores
         public async Task LogoutAsync()
         {
             await _signInManager.SignOutAsync();
+        }
+
+        public async Task<IdentityResult> UpdateUsuarioAsync(Usuario user)
+        {
+            return await _userManager.UpdateAsync(user);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Metrics;
 using TiendaVirtual.Ayudadores;
@@ -6,6 +7,7 @@ using TiendaVirtual.Data;
 using TiendaVirtual.Data.Entities;
 using TiendaVirtual.Enum;
 using TiendaVirtual.Models;
+using static TiendaVirtual.Models.CambiarContraseñaVistaModelo;
 
 namespace TiendaVirtual.Controllers
 {
@@ -89,6 +91,8 @@ namespace TiendaVirtual.Controllers
                 if (usuario == null)
                 {
                     ModelState.AddModelError(string.Empty, "Este correo ya está siendo usado.");
+                    model.Estados = await _combosAyudas.GetComboEstadosAsync();
+                    model.Ciudades = await _combosAyudas.GetComboCiudadAsync(model.EstadoId);
                     return View(model);
                 }
 
@@ -106,7 +110,8 @@ namespace TiendaVirtual.Controllers
                     return RedirectToAction("Index", "Home");
                 }
             }
-
+            model.Estados = await _combosAyudas.GetComboEstadosAsync();
+            model.Ciudades = await _combosAyudas.GetComboCiudadAsync(model.EstadoId);
             return View(model);
         }
 
@@ -121,6 +126,102 @@ namespace TiendaVirtual.Controllers
             }
 
             return Json(estado.Ciudades.OrderBy(d => d.Nombre));
+        }
+
+        public async Task<IActionResult> CambioUsuario()
+        {
+            Usuario usuario = await _ayudaUsuario.GetUsuarioAsync(User.Identity.Name);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            EditarUsuarioVistaModelo model = new()
+            {
+                Direccion = usuario.Direccion,
+                Nombre = usuario.Nombre,
+                Apellido = usuario.Apellido,
+                PhoneNumber = usuario.PhoneNumber,
+                ImagenId = usuario.ImagenId,
+                Ciudades = await _combosAyudas.GetComboCiudadAsync(usuario.Ciudad.Estado.Id),
+                CiudadId = usuario.Ciudad.Id,
+                Estados = await _combosAyudas.GetComboEstadosAsync(),
+                EstadoId = usuario.Ciudad.Estado.Id,
+                Id = usuario.Id,
+                Documento = usuario.Documento
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CambioUsuario(EditarUsuarioVistaModelo model)
+        {
+            if (ModelState.IsValid)
+            {
+                Guid imagenId = model.ImagenId;
+
+                if (model.ImageFile != null)
+                {
+                    imagenId = await _blobAyudas.UploadBlobAsync(model.ImageFile, "usuarios");
+                }
+
+                Usuario usuario = await _ayudaUsuario.GetUsuarioAsync(User.Identity.Name);
+
+                usuario.Nombre = model.Nombre;
+                usuario.Apellido = model.Apellido;
+                usuario.Direccion = model.Direccion;
+                usuario.PhoneNumber = model.PhoneNumber;
+                usuario.ImagenId = imagenId;
+                usuario.Ciudad = await _context.Ciudades.FindAsync(model.CiudadId);
+                usuario.Documento = model.Documento;
+
+                await _ayudaUsuario.UpdateUsuarioAsync(usuario);
+                return RedirectToAction("Index", "Home");
+            }
+
+            model.Estados = await _combosAyudas.GetComboEstadosAsync();
+            model.Ciudades = await _combosAyudas.GetComboCiudadAsync(model.EstadoId);
+            return View(model);
+        }
+
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(CambiarContraseñaVistaModelo model)
+        {
+            if (ModelState.IsValid)
+            {
+                if(model.OldPassword == model.NewPassword)
+                {
+                    ModelState.AddModelError(string.Empty, "Debes ingresar una contraseña diferente.");
+                    return View(model);
+                }
+
+                Usuario? usuario = await _ayudaUsuario.GetUsuarioAsync(User.Identity.Name);
+                if (usuario != null)
+                {
+                    IdentityResult? result = await _ayudaUsuario.ChangePasswordAsync(usuario, model.OldPassword, model.NewPassword);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("CambioUsuario");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, result.Errors.FirstOrDefault().Description);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Usuario no encontrado.");
+                }
+            }
+
+            return View(model);
         }
 
 

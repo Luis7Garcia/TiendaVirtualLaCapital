@@ -1,0 +1,62 @@
+﻿@model TiendaVirtual.Models.EditarUsuarioVistaModelo
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Editar</h2>
+
+<h4>Usuario</h4>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="CambioUsuario" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ImagenId" />
+            <input type="hidden" asp-for="Estados" />
+            <input type="hidden" asp-for="Ciudades" />
+
+            <partial name="_Usuario" />
+
+            <div class="form-group mt-2">
+                <input type="submit" value="Guardar" class="btn btn-outline-primary" />
+                <a asp-action="ChangePassword" class="btn btn-outline-secondary">Cambiar Contraseña</a>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4">
+        <img src="@Model.ImageFullPath" style="width:200px;height:200px;border-radius:50%" />
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#EstadoId").change(function () {
+                debugger;
+                $("#CiudadId").empty();
+                $("#CiudadId").append('<option value="0">[Selecciona una ciudad...]</option>');
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetCiudades")',
+                    dataType: 'json',
+                    data: { estadoId: $("#EstadoId").val() },
+                    success: function (ciudades) {
+                        $.each(ciudades, function (i, ciudad) {
+                            $("#CiudadId").append('<option value="'
+                                + ciudad.id + '">'
+                                + ciudad.nombre + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve ciudades.' + ex);
+                    }
+                });
+                return false;
+            })
+        });
+    </script>
+}

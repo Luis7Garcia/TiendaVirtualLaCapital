@@ -48,7 +48,7 @@ namespace TiendaVirtual.Models
         public IFormFile ImageFile { get; set; }
 
 
-        [Display(Name = "Departmento / Estado")]
+        [Display(Name = "Departamento / Estado")]
         [Range(1, int.MaxValue, ErrorMessage = "Debes de seleccionar un departamento/estado.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public int EstadoId { get; set; }

@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace TiendaVirtual.Data.Entities
 {
@@ -13,6 +15,8 @@ namespace TiendaVirtual.Data.Entities
         public string Nombre { get; set; }
 
         //Se agrega la relación uno a muchos con la tabla ciudad.
+
+        [JsonIgnore]
         public ICollection<Ciudad> Ciudades { get; set; }
 
         [Display(Name ="Número ciudades")]

@@ -9,6 +9,8 @@ namespace TiendaVirtual.Ayudadores
         //Este método permite pasarle el email del usuario y devuelve el usuario
         Task<Usuario> GetUsuarioAsync(string email);
 
+        Task<Usuario> GetUsuarioAsync(Guid userId);
+
         //Este método permite crear el usuario se le pasa el usuario y la contraseña 
         Task<IdentityResult> AddUsuarioAsync(Usuario user, string password);
         Task<Usuario> AddUsuarioAsync(AgregarUsuarioVistaModelo model); 
@@ -26,5 +28,12 @@ namespace TiendaVirtual.Ayudadores
 
         // Este método hace el cierre de sesión.
         public Task LogoutAsync();
+
+        Task<IdentityResult> ChangePasswordAsync(Usuario user, string oldPassword, string newPassword);
+
+        Task<IdentityResult> UpdateUsuarioAsync(Usuario user);
+
+        
+
     }
 }
