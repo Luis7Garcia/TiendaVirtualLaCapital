@@ -17,13 +17,20 @@ builder.Services.AddDbContext<DatosTienda>(o =>
 
 builder.Services.AddIdentity<Usuario, IdentityRole>(cfg =>
 {
+    cfg.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
+    cfg.SignIn.RequireConfirmedEmail = true;
     cfg.User.RequireUniqueEmail = true;
     cfg.Password.RequireDigit = false;
     cfg.Password.RequiredUniqueChars = 0;
     cfg.Password.RequireLowercase = false;
     cfg.Password.RequireNonAlphanumeric = false;
     cfg.Password.RequireUppercase = false;
-}).AddEntityFrameworkStores<DatosTienda>();
+    cfg.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    cfg.Lockout.MaxFailedAccessAttempts = 3;
+    cfg.Lockout.AllowedForNewUsers = true;
+})
+    .AddDefaultTokenProviders()
+    .AddEntityFrameworkStores<DatosTienda>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -40,6 +47,7 @@ builder.Services.AddTransient<PrincipalDb>();
 builder.Services.AddScoped<IayudasUsuario, AyudasUsuario>();
 builder.Services.AddScoped<ICombosAyudas, ComboAyudas>();
 builder.Services.AddScoped<IBlobAyudas, BlobAyudas>();
+builder.Services.AddScoped<IAyudaCorreo, AyudaCorreo>();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
 var app = builder.Build();
@@ -48,11 +56,11 @@ principalData();
 //Con este método estoy inyectando la conexión a la base de datos con el principalDb
 void principalData()
 {
-   IServiceScopeFactory? scopeFactory = app.Services.GetService<IServiceScopeFactory>();
+   IServiceScopeFactory scopeFactory = app.Services.GetService<IServiceScopeFactory>();
 
-    using (IServiceScope? scope = scopeFactory.CreateScope())
+    using (IServiceScope scope = scopeFactory.CreateScope())
     {
-        PrincipalDb? service = scope.ServiceProvider.GetService<PrincipalDb>();
+        PrincipalDb service = scope.ServiceProvider.GetService<PrincipalDb>();
         service.PrincipalAsync().Wait();
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TiendaVirtual.Ayudadores;
+using TiendaVirtual.Common;
 using TiendaVirtual.Data;
 using TiendaVirtual.Data.Entities;
 using TiendaVirtual.Enum;
@@ -16,13 +17,15 @@ namespace TiendaVirtual.Controllers
         private readonly IayudasUsuario _ayudasUsuario;
         private readonly IBlobAyudas _blobAyudas;
         private readonly ICombosAyudas _combosAyudas;
+        private readonly IAyudaCorreo _ayudaCorreo;
 
-        public UsuariosController(DatosTienda context, IayudasUsuario ayudasUsuario, IBlobAyudas blobAyudas, ICombosAyudas combosAyudas)
+        public UsuariosController(DatosTienda context, IayudasUsuario ayudasUsuario, IBlobAyudas blobAyudas, ICombosAyudas combosAyudas, IAyudaCorreo ayudaCorreo)
         {
             _context = context;
             _ayudasUsuario = ayudasUsuario;
             _blobAyudas = blobAyudas;
             _combosAyudas = combosAyudas;
+            _ayudaCorreo = ayudaCorreo;
         }
         public async Task<IActionResult> Index()
         {
@@ -67,10 +70,31 @@ namespace TiendaVirtual.Controllers
                     return View(model);
                 }
 
-              
-                    return RedirectToAction("Index", "Home");
-                
-            }
+
+                string myToken = await _ayudasUsuario.GenerateEmailConfirmationTokenAsync(usuario);
+                string tokenLink = Url.Action("ConfirmEmail", "Cuenta", new
+                {
+                    userid = usuario.Id,
+                    token = myToken
+                }, protocol: HttpContext.Request.Scheme);
+
+                Response response = _ayudaCorreo.SendMail(
+                    $"{model.Nombre} {model.Apellido}",
+                    model.Username,
+                    "Shopping - Confirmación de Email",
+                    $"<h1>TiendaVirtual - Confirmación de Email</h1>" +
+                        $"Para habilitar el usuario por favor hacer click en el siguiente link:, " +
+                        $"<hr/><br/><p><a href = \"{tokenLink}\">Confirmar Email</a></p>");
+                if (response.IsSuccess)
+                {
+                    ViewBag.Message = "Las instrucciones para habilitar el administrador han sido enviadas al correo.";
+                    return View(model);
+                }
+
+                ModelState.AddModelError(string.Empty, response.Message);
+            
+
+        }
             model.Estados = await _combosAyudas.GetComboEstadosAsync();
             model.Ciudades = await _combosAyudas.GetComboCiudadAsync(model.EstadoId);
             return View(model);

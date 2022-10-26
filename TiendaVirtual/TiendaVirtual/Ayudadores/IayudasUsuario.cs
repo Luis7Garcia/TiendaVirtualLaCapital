@@ -33,7 +33,13 @@ namespace TiendaVirtual.Ayudadores
 
         Task<IdentityResult> UpdateUsuarioAsync(Usuario user);
 
-        
+        Task<string> GenerateEmailConfirmationTokenAsync(Usuario user);
+
+        Task<IdentityResult> ConfirmEmailAsync(Usuario user, string token);
+
+        Task<string> GeneratePasswordResetTokenAsync(Usuario user);
+
+        Task<IdentityResult> ResetPasswordAsync(Usuario user, string token, string password);
 
     }
 }

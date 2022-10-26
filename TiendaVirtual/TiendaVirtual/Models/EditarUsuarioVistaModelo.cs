@@ -45,7 +45,7 @@ namespace TiendaVirtual.Models
              : $"https://tiendalacapital.blob.core.windows.net/usuarios/{ImagenId}";
 
         [Display(Name = "Image")]
-        public IFormFile ImageFile { get; set; }
+        public IFormFile? ImageFile { get; set; }
 
 
         [Display(Name = "Departamento / Estado")]

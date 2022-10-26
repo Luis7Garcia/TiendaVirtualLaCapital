@@ -56,6 +56,10 @@ namespace TiendaVirtual.Data
                 };
                 await _ayudaUsuario.AddUsuarioAsync(usuario, "1234567");
                 await _ayudaUsuario.AddUsuarioARolAsync(usuario, tipoUsuario.ToString());
+
+                string token = await _ayudaUsuario.GenerateEmailConfirmationTokenAsync(usuario);
+                await _ayudaUsuario.ConfirmEmailAsync(usuario, token);
+
             }
         }
         

@@ -13,8 +13,7 @@ namespace TiendaVirtual.Ayudadores
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<Usuario> _signInManager;
 
-        public AyudasUsuario(DatosTienda context, UserManager<Usuario> userManager, RoleManager<IdentityRole> roleManager,
-            SignInManager<Usuario> signInManager)
+        public AyudasUsuario(DatosTienda context, UserManager<Usuario> userManager, RoleManager<IdentityRole> roleManager, SignInManager<Usuario> signInManager)
         {
             _context = context;
             _userManager = userManager;
@@ -76,6 +75,21 @@ namespace TiendaVirtual.Ayudadores
             }
         }
 
+        public async Task<IdentityResult> ConfirmEmailAsync(Usuario user, string token)
+        {
+           return await _userManager.ConfirmEmailAsync(user, token);
+        }
+
+        public async Task<string> GenerateEmailConfirmationTokenAsync(Usuario user)
+        {
+            return await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        }
+
+        public async Task<string> GeneratePasswordResetTokenAsync(Usuario user)
+        {
+            return await _userManager.GeneratePasswordResetTokenAsync(user);
+        }
+
         public async Task<Usuario> GetUsuarioAsync(string email)
         {
             return await _context.Users
@@ -99,13 +113,19 @@ namespace TiendaVirtual.Ayudadores
 
         public async Task<SignInResult> LoginAsync(LoginVistaModelo model)
         {
-            return await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, false);
+            return await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, true);
         }
 
         public async Task LogoutAsync()
         {
             await _signInManager.SignOutAsync();
         }
+
+        public async Task<IdentityResult> ResetPasswordAsync(Usuario user, string token, string password)
+        {
+            return await _userManager.ResetPasswordAsync(user, token, password);
+        }
+
 
         public async Task<IdentityResult> UpdateUsuarioAsync(Usuario user)
         {
